@@ -1,5 +1,5 @@
 ---
 applications:
-- name: simple-go-web-app
+- name: simpleConcurrenceTest
   disk: 256M
   memory: 128M
