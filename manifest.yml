@@ -1,5 +1,66 @@
----
-applications:
-- name: Rubu-Build-Pack
-  disk: 256M
-  memory: 128M
+name: redis
+director_uuid: d083b82c-00d5-46c7-bf17-619128b609d7
+releases:
+- name: redis
+  version: latest
+compilation:
+  workers: 6
+  network: redis1
+  reuse_compilation_vms: true
+  cloud_properties:
+    instance_type: m1.small
+update:
+  canaries: 1
+  max_in_flight: 50
+  canary_watch_time: 1000-100000
+  update_watch_time: 1000-100000
+  serial: false
+networks:
+- name: redis1
+  type: manual
+  subnets:
+  - range:   10.10.5.0/24
+    gateway: 10.10.5.1
+    reserved:
+      - 10.10.5.2-10.10.5.4
+    static:
+      - 10.10.5.5-10.10.5.10
+    cloud_properties:
+      subnet: subnet-5d51d338
+resource_pools:
+- name: small_z1
+  network: redis1
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: 3262.2
+  cloud_properties:
+    instance_type: m3.medium
+
+jobs:
+- name: redis_leader_z1
+  templates:
+  - name: redis
+    release: redis
+  instances: 1
+  resource_pool: small_z1
+  persistent_disk: 4096
+  networks:
+  - name: redis1
+  properties:
+    network: redis1
+
+- name: redis_z1
+  templates:
+  - name: redis
+    release: redis
+  instances: 1
+  resource_pool: small_z1
+  persistent_disk: 4096
+  networks:
+  - name: redis1
+  properties:
+    network: redis1
+    redis:
+      master: 0.redis-leader-z1.redis1.redis.microbosh
+properties:
+  redis: {}
