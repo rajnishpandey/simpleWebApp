@@ -1,5 +1,5 @@
 ---
 applications:
-- name: simpleConcurrenceTest
+- name: Rubu-Build-Pack
   disk: 256M
   memory: 128M
