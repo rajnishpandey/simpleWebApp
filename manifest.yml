@@ -1,7 +1,7 @@
-name: redis
+name: redisTemp
 director_uuid: d083b82c-00d5-46c7-bf17-619128b609d7
 releases:
-- name: redis
+- name: redisTemp
   version: latest
 compilation:
   workers: 6
